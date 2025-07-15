@@ -1714,7 +1714,7 @@ func (d *DB) GetSchemaInfo(
 		return nil, fmt.Errorf("find schema: %w", err)
 	}
 	if raw == nil {
-		return nil, fmt.Errorf("%s: %w", name, database.ErrSchemaNotFound)
+		return nil, fmt.Errorf("%s %d: %w", name, version, database.ErrSchemaNotFound)
 	}
 
 	return raw.(*database.SchemaInfo).DeepCopy(), nil
@@ -1799,7 +1799,7 @@ func (d *DB) RemoveSchemaInfo(
 		return fmt.Errorf("find schema: %w", err)
 	}
 	if raw == nil {
-		return fmt.Errorf("%s: %w", name, database.ErrSchemaNotFound)
+		return fmt.Errorf("%s %d: %w", name, version, database.ErrSchemaNotFound)
 	}
 
 	schemaInfo := raw.(*database.SchemaInfo)

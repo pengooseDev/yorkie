@@ -221,3 +221,15 @@ func TestClient_RotateProjectKeys(t *testing.T) {
 		assert.ErrorIs(t, err, database.ErrProjectNotFound)
 	})
 }
+
+func TestClient_GetSchemaInfo(t *testing.T) {
+  cli := setupTestWithDummyData(t)
+  ctx := context.Background()
+
+  t.Run("fail: should return error with version when schema not found", func(t *testing.T) {
+    _, err := cli.GetSchemaInfo(ctx, dummyProjectID, "noexist", 123)
+		assert.Error(t, err)
+		assert.ErrorIs(t, err, database.ErrSchemaNotFound)
+		assert.Contains(t, err.Error(), "noexist 123")
+	})
+}

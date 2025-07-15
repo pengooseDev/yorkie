@@ -17,11 +17,13 @@
 package memory_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
 	"github.com/yorkie-team/yorkie/api/types"
+	"github.com/yorkie-team/yorkie/server/backend/database"
 	"github.com/yorkie-team/yorkie/server/backend/database/memory"
 	"github.com/yorkie-team/yorkie/server/backend/database/testcases"
 )
@@ -122,5 +124,12 @@ func TestDB(t *testing.T) {
 
 	t.Run("RunPurgeDocument test", func(t *testing.T) {
 		testcases.RunPurgeDocument(t, db, projectID)
+	})
+	
+	t.Run("fail: GetSchemaInfo returns ErrSchemaNotFound with version", func(t *testing.T) {
+		_, err := db.GetSchemaInfo(context.Background(), projectID, "noexist", 123)
+		assert.Error(t, err)
+		assert.ErrorIs(t, err, database.ErrSchemaNotFound)
+		assert.Contains(t, err.Error(), "noexist 123")
 	})
 }
